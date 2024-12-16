@@ -12,16 +12,20 @@ export const getCats = () => {
 };
 
 /**
- * The addCat function adds a new cat with a given name and sets its status as
- * "Available" with an auto-incremented ID.
- * @param name - The `name` parameter in the `addCat` function represents the name
- * of the cat that will be added to the `cats` array.
+ * The function `addCat` adds a new cat object to an array of cats.
+ * @param name - The name of the cat being added.
+ * @param status - The status of the cat being added.
+ * @param age - The age of the cat being added.
+ * @param description - The description parameter is a string that represents the
+ * description of the cat being added.
  */
-export const addCat = (name) => {
+export const addCat = (name, status, age, description) => {
   const newCat = {
-    id: cats.length + 1, // Auto-increment ID
+    id: Date.now(),
     name,
-    status: "Available",
+    status,
+    age,
+    description,
   };
   cats.push(newCat);
 };
