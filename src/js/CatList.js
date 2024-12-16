@@ -38,3 +38,13 @@ export const toggleCatStatus = (id) => {
     cat.status = cat.status === "Available" ? "Adopted" : "Available";
   }
 };
+
+/**
+ * The `deleteCat` function removes a cat from an array of cats based on its id.
+ * @param id - The `id` parameter in the `deleteCat` function represents the unique
+ * identifier of the cat that needs to be deleted from the `cats` array. The
+ * function filters out the cat with the specified `id` from the array.
+ */
+export const deleteCat = (id) => {
+  cats = cats.filter((cat) => cat.id !== id);
+};

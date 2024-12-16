@@ -2,7 +2,6 @@
   <div class="cat-list-container">
     <h1 class="text-2xl font-bold mb-4">Cat Management</h1>
     
-    <!-- Formulario para agregar gatos -->
     <form @submit.prevent="addNewCat" class="mb-4">
       <input
         type="text"
@@ -13,7 +12,6 @@
       <button type="submit" class="bg-blue-500 text-white p-2 rounded">Add Cat</button>
     </form>
 
-    <!-- Lista de gatos -->
     <ul>
       <li v-for="cat in cats" :key="cat.id" class="mb-2">
         {{ cat.name }} - {{ cat.status }}
@@ -23,9 +21,31 @@
         >
           Toggle Status
         </button>
+        <button
+          @click="removeCat(cat.id)"
+          class="ml-2 bg-red-500 text-white p-1 rounded"
+        >
+          Delete
+        </button>
       </li>
     </ul>
   </div>
+
+  <div class="mb-4">
+    <label for="filter" class="mr-2">Filter by Status:</label>
+    <select id="filter" v-model="filterStatus" @change="filterCats">
+      <option value="All">All</option>
+      <option value="Available">Available</option>
+      <option value="Adopted">Adopted</option>
+    </select>
+  </div>
+
+  <div class="mb-4">
+    <p>Total Cats: {{ cats.length }}</p>
+    <p>Available: {{ availableCount }}</p>
+    <p>Adopted: {{ adoptedCount }}</p>
+  </div>
+
 </template>
 
 <script>
@@ -36,7 +56,8 @@ export default {
   data() {
     return {
       cats: getCats(),
-      newCatName: "", // Form input
+      newCatName: "",
+      filterStatus: "All", // All cats by default
     };
   },
   methods: {
@@ -51,7 +72,29 @@ export default {
       toggleCatStatus(id); // Update status
       this.cats = getCats(); // Update list
     },
+    removeCat(id) {
+      deleteCat(id); // Delete cat
+      this.cats = getCats(); // Update list  
+    },
+    filterCats() {
+      const allCats = getCats();
+      if (this.filterStatus === "All") {
+        this.cats = allCats;
+      } else {
+        this.cats = allCats.filter((cat) => cat.status === this.filterStatus);
+      }
+    },
   },
+
+  computed: {
+    availableCount() {
+      return this.cats.filter((cat) => cat.status === "Available").length;
+    },
+    adoptedCount() {
+      return this.cats.filter((cat) => cat.status === "Adopted").length;
+    },
+  },
+
 };
 </script>
 
