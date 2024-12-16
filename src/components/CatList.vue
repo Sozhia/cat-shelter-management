@@ -1,4 +1,33 @@
 <template>
+
+<div class="mb-4">
+  <h2 class="text-xl font-bold">Search & Filter Cats</h2>
+  <input
+    type="text"
+    v-model="searchQuery"
+    placeholder="Search by name"
+    class="border p-2 rounded mr-2"
+  />
+  <select v-model="filterStatus" class="border p-2 rounded mr-2">
+    <option value="All">All</option>
+    <option value="Available">Available</option>
+    <option value="Adopted">Adopted</option>
+  </select>
+  <input
+    type="number"
+    v-model="filterMinAge"
+    placeholder="Min Age"
+    class="border p-2 rounded mr-2"
+  />
+  <input
+    type="number"
+    v-model="filterMaxAge"
+    placeholder="Max Age"
+    class="border p-2 rounded"
+  />
+</div>
+
+
   <div class="cat-list-container">
     <h2 class="text-xl font-bold">Add a New Cat</h2>
   <form @submit.prevent="addNewCat" class="flex flex-col gap-2">
@@ -29,8 +58,8 @@
     <button type="submit" class="bg-blue-500 text-white p-2 rounded">Add Cat</button>
   </form>
 
-    <ul>
-    <li v-for="cat in cats" :key="cat.id" class="mb-4 p-4 border rounded">
+  <ul>
+    <li v-for="cat in filteredCats" :key="cat.id" class="mb-4 p-4 border rounded">
       <h3 class="text-lg font-bold">{{ cat.name }}</h3>
       <p>Status: {{ cat.status }}</p>
       <p>Age: {{ cat.age }}</p>
@@ -81,7 +110,10 @@ export default {
       newCatStatus: "Available",
       newCatAge: "",
       newCatDescription: "",
+      searchQuery: "",
       filterStatus: "All",
+      filterMinAge: "",
+      filterMaxAge: "",
     };
   },
   methods: {
@@ -116,11 +148,16 @@ export default {
   },
 
   computed: {
-    availableCount() {
-      return this.cats.filter((cat) => cat.status === "Available").length;
-    },
-    adoptedCount() {
-      return this.cats.filter((cat) => cat.status === "Adopted").length;
+    filteredCats() {
+      return this.cats.filter((cat) => {
+        const matchesName = cat.name.toLowerCase().includes(this.searchQuery.toLowerCase());
+        const matchesStatus =
+          this.filterStatus === "All" || cat.status === this.filterStatus;
+        const matchesAge =
+          (!this.filterMinAge || cat.age >= this.filterMinAge) &&
+          (!this.filterMaxAge || cat.age <= this.filterMaxAge);
+        return matchesName && matchesStatus && matchesAge;
+      });
     },
   },
 
