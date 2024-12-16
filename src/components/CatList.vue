@@ -1,6 +1,12 @@
 <template>
 
 <div class="mb-4">
+  <div class="mb-4">
+      <button @click="handleAddCat" class="bg-blue-500 text-white py-2 px-4 rounded" >
+        Add New Cat
+      </button>
+  </div>
+
   <h2 class="text-xl font-bold">Search & Filter Cats</h2>
   <input
     type="text"
@@ -29,34 +35,6 @@
 
 
   <div class="cat-list-container">
-    <h2 class="text-xl font-bold">Add a New Cat</h2>
-  <form @submit.prevent="addNewCat" class="flex flex-col gap-2">
-    <input
-      type="text"
-      v-model="newCatName"
-      placeholder="Name"
-      class="border p-2 rounded"
-      required
-    />
-    <select v-model="newCatStatus" class="border p-2 rounded">
-      <option value="Available">Available</option>
-      <option value="Adopted">Adopted</option>
-    </select>
-    <input
-      type="number"
-      v-model="newCatAge"
-      placeholder="Age"
-      class="border p-2 rounded"
-      required
-    />
-    <textarea
-      v-model="newCatDescription"
-      placeholder="Description"
-      class="border p-2 rounded"
-      required
-    ></textarea>
-    <button type="submit" class="bg-blue-500 text-white p-2 rounded">Add Cat</button>
-  </form>
 
   <ul>
     <li v-for="cat in filteredCats" :key="cat.id" class="mb-4 p-4 border rounded">
@@ -93,8 +71,7 @@
     <p>Available: {{ availableCount }}</p>
     <p>Adopted: {{ adoptedCount }}</p>
   </div>
-
-  </div>
+ </div>
 
 </template>
 
@@ -114,20 +91,13 @@ export default {
       filterStatus: "All",
       filterMinAge: "",
       filterMaxAge: "",
+      showModal: false,
+
     };
   },
   methods: {
-    addNewCat() {
-      if (this.newCatName && this.newCatAge && this.newCatDescription) {
-        addCat(this.newCatName, this.newCatStatus, this.newCatAge, this.newCatDescription);
-        this.cats = getCats(); 
-        this.newCatName = "";
-        this.newCatStatus = "Available";
-        this.newCatAge = "";
-        this.newCatDescription = "";
-      } else {
-        alert("Please fill in all the fields.");
-      }
+    handleAddCat() {
+      addCat(this.cats);
     },
     toggleStatus(id) {
       toggleCatStatus(id); // Update status
@@ -162,9 +132,11 @@ export default {
   },
 
 };
+
 </script>
 
 <style scoped>
+
 .cat-list-container {
   padding: 1rem;
   /*background-color: ;*/
@@ -178,4 +150,25 @@ input {
 button {
   cursor: pointer;
 }
+
+.modal-overlay {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  transition: all 0.3s ease-in-out;
+  animation: slide-in 0.3s ease-out;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 </style>
